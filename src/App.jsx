@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-const { filterSkillsByCategory } = require('../skillswap-functions');
+import { filterSkillsByCategory, calculateTotalCost } from '../skillswap-functions';
 import './App.css';
 
 // Body content created in collaboration with AI chatbots
@@ -15,6 +15,17 @@ function App() {
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const filteredSkills = filterSkillsByCategory(skills, selectedCategory);
+  
+  // Calculator State
+  const [calcRate, setCalcRate] = useState('');
+  const [calcHours, setCalcHours] = useState('');
+  const [totalCost, setTotalCost] = useState(null);
+
+  const handleCalculate = () => {
+    const rateNum = parseFloat(calcRate) || 0; // Fallback to 0 if no input value
+    const hoursNum = parseFloat(calcHours) || 0; // Fallback to 0 if no input value
+    setTotalCost(calculateTotalCost(rateNum, hoursNum));
+  };
 
   // Function to toggle card expansion on click
   const toggleCard = (id) => {
@@ -98,6 +109,40 @@ function App() {
               ))
             )}
           </div>
+        </section>
+
+        {/* Cost Calculator Section */}
+        <section id="calculator" className="calculator-section">
+          <h2>Cost Calculator</h2>
+          <p className="section-subtitle">Calculate the total cost for a tutoring session based on hourly rates and hours.</p>
+          <div className="input-group">
+            <input
+              className="calc-input"
+              type="number"
+              placeholder="Hourly Rate ($)"
+              value={calcRate}
+              onChange={(e) => setCalcRate(e.target.value)}
+            />
+            <input
+              className="calc-input"
+              type="number"
+              placeholder="Hours"
+              step="0.1"
+              value={calcHours}
+              onChange={(e) => setCalcHours(e.target.value)}
+            />
+            <button 
+              className="btn-primary calc-btn" 
+              onClick={handleCalculate}
+            >
+              Calculate Total
+            </button>
+          </div>
+          {totalCost !== null && (
+            <p className="calc-result">
+              Total Cost: ${totalCost.toFixed(2)}
+            </p>
+          )}
         </section>
       </main>
 

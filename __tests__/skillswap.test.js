@@ -1,4 +1,4 @@
-const { filterSkillsByCategory, calculateTotalCost } = require('../skillswap-functions.js');
+import { filterSkillsByCategory, calculateTotalCost } from '../skillswap-functions.js';
 
 const skills = [
   { title: 'Python Tutoring', category: 'Programming', price: 20 },
