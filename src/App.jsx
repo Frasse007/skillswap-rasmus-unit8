@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { filterSkillsByCategory } from '../skillswap-functions';
+const { filterSkillsByCategory } = require('../skillswap-functions');
 import './App.css';
 
 // Body content created in collaboration with AI chatbots
