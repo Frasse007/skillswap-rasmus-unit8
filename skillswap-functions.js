@@ -8,3 +8,7 @@ export function filterSkillsByCategory(skills, category) {
 export function calculateTotalCost(hourlyRate, hours) {
     return hourlyRate * hours;
 }
+
+export function matchSkillsToUser(userNeeds, skills) {
+    
+}
