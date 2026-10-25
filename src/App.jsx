@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
+import { filterSkillsByCategory } from '../skillswap-functions';
 import './App.css';
 
 // Body content created in collaboration with AI chatbots
 function App() {
   const [skills, setSkills] = useState([
-    { id: 1, title: 'React & Frontend Development', description: 'Master component-driven development, hooks, and modern state management.', price: '$25/hr', provider: 'Alex Johnson', expanded: false },
-    { id: 2, title: 'Python & Data Analysis', description: 'Learn pandas, numpy, and basic machine learning concepts from scratch.', price: '$30/hr', provider: 'Samantha Smith', expanded: false },
-    { id: 3, title: 'Advanced Spanish Conversation', description: 'Improve fluency through real-world dialogues and grammar practice.', price: '$20/hr', provider: 'Carlos Mendez', expanded: false },
-    { id: 4, title: 'Calculus & Linear Algebra', description: 'Break down complex math proofs, derivatives, and matrix operations.', price: '$35/hr', provider: 'Dr. Emily Chen', expanded: false }
+    { id: 1, title: 'React & Frontend Development', category: 'Programming', description: 'Master component-driven development, hooks, and modern state management.', price: 25, provider: 'Alex Johnson', expanded: false },
+    { id: 2, title: 'Python & Data Analysis', category: 'Programming', description: 'Learn pandas, numpy, and basic machine learning concepts from scratch.', price: 30, provider: 'Samantha Smith', expanded: false },
+    { id: 3, title: 'Advanced Spanish Conversation', category: 'Language', description: 'Improve fluency through real-world dialogues and grammar practice.', price: 20, provider: 'Carlos Mendez', expanded: false },
+    { id: 4, title: 'Calculus & Linear Algebra', category: 'Math', description: 'Break down complex math proofs, derivatives, and matrix operations.', price: 35, provider: 'Dr. Emily Chen', expanded: false },
+    { id: 5, title: 'Guitar Lessons', category: 'Music', description: 'Learn chords, strumming, and your favorite songs.', price: 15, provider: 'Mark Taylor', expanded: false },
+    { id: 6, title: 'Resume Review', category: 'Career', description: 'Get professional feedback on your resume and cover letter.', price: 0, provider: 'Sarah Jenkins', expanded: false }
   ]);
+
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const filteredSkills = filterSkillsByCategory(skills, selectedCategory);
 
   // Function to toggle card expansion on click
   const toggleCard = (id) => {
@@ -26,7 +32,8 @@ function App() {
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#browse">Browse Skills</a></li>
-            <li><a href="#offer">Offer Skills</a></li>
+            <li><a href="#calculator">Calculator</a></li>
+            <li><a href="matcher">Matcher</a></li>
             <li><a href="#about">About</a></li>
           </ul>
         </nav>
@@ -46,8 +53,18 @@ function App() {
           <h2>Featured Skill Offerings</h2>
           <p className="section-subtitle">Click any card to view more details or book a session.</p>
           
+          {/* Filter Buttons */}
+          <div className="filter-buttons-group">
+            {['All', 'Programming', 'Music', 'Career', 'Language', 'Math'].map(cat => (
+              <button key={cat} className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`} onClick={() => setSelectedCategory(cat)}>{cat}</button>
+            ))}
+          </div>
+
           <div className="cards-grid">
-            {skills.map(skill => (
+            {filteredSkills.length === 0 ? (
+              <p>No skills found in this category.</p>
+            ) : (
+              filteredSkills.map(skill => (
               <div 
                 key={skill.id} 
                 className={`skill-card ${skill.expanded ? 'expanded' : ''}`}
@@ -63,6 +80,7 @@ function App() {
                 {skill.expanded && (
                   <div className="card-extra-details">
                     <hr />
+                    <p><strong>Category:</strong> {skill.category}</p>
                     <p><strong>Availability:</strong> Mon, Wed, Fri (4 PM - 7 PM)</p>
                     <button 
                       className="btn-book" 
@@ -77,7 +95,8 @@ function App() {
                 )}
                 <span className="click-hint">{skill.expanded ? 'Click to collapse' : 'Click for details'}</span>
               </div>
-            ))}
+              ))
+            )}
           </div>
         </section>
       </main>
