@@ -41,6 +41,11 @@ describe('Calculating Total Costs Tests', () => {
   test('returns correct value for decimal hours', () => {
     expect(calculateTotalCost(25, 1.5)).toBe(37.5);
   });
+
+  test('handles zero rate or negative values gracefully in calculator', () => {
+    expect(calculateTotalCost(0, 5)).toBe(0);
+    expect(calculateTotalCost(20, -2)).toBe(-40);
+  });
 });
 
 describe('Matching Skills to User Needs', () => {
@@ -69,5 +74,11 @@ describe('Matching Skills to User Needs', () => {
     expect(matchSkillsToUser(userNeeds, skills)).toEqual([
       { title: 'Resume Review', category: 'Career', price: 0 }
     ]);
+  });
+
+  test('matcher allows empty category filter to search by price only', () => {
+    const userNeeds = { category: '', maxPrice: 20 };
+    const result = matchSkillsToUser(userNeeds, skills);
+    expect(result.length).toBe(3);
   });
 });
