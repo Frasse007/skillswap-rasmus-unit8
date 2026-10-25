@@ -1,4 +1,4 @@
-const { filterSkillsByCategory } = require('../skillswap-functions');
+import { filterSkillsByCategory, calculateTotalCost } from '../skillswap-functions.js';
 
 const skills = [
   { title: 'Python Tutoring', category: 'Programming', price: 20 },
@@ -25,4 +25,20 @@ describe('Skills Filtering Tests', () => {
         const result = filterSkillsByCategory(skills, 'Cooking');
         expect(result).toEqual([]);
     });
+});
+
+describe('Calculating Total Costs Tests', () => {
+  test('returns the correct values for different hours and rates', () => {
+    expect(calculateTotalCost(20, 2)).toBe(40);
+    expect(calculateTotalCost(25, 3)).toBe(75);
+  });
+
+  test('handles free sessions (0 price) and zero hours', () => {
+    expect(calculateTotalCost(0, 3)).toBe(0);
+    expect(calculateTotalCost(20, 0)).toBe(0);
+  });
+
+  test('returns correct value for decimal hours', () => {
+    expect(calculateTotalCost(25, 1.5)).toBe(37.5);
+  });
 });
