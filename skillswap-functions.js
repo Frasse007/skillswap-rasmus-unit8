@@ -6,7 +6,7 @@ function filterSkillsByCategory(skills, category) {
 }
 
 function calculateTotalCost(hourlyRate, hours) {
-    
+    return hourlyRate * hours;
 }
 
 module.exports = {
