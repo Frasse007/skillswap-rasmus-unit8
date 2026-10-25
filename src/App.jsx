@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { filterSkillsByCategory, calculateTotalCost } from '../skillswap-functions';
+import { filterSkillsByCategory, calculateTotalCost, matchSkillsToUser } from '../skillswap-functions';
 import './App.css';
 
 // Body content created in collaboration with AI chatbots
@@ -25,6 +25,16 @@ function App() {
     const rateNum = parseFloat(calcRate) || 0; // Fallback to 0 if no input value
     const hoursNum = parseFloat(calcHours) || 0; // Fallback to 0 if no input value
     setTotalCost(calculateTotalCost(rateNum, hoursNum));
+  };
+
+  // Matcher State
+  const [matchCategory, setMatchCategory] = useState('');
+  const [matchMaxPrice, setMatchMaxPrice] = useState('');
+  const [matchedResults, setMatchedResults] = useState([]);
+
+  const handleMatch = () => {
+    const userNeeds = { category: matchCategory.trim(), maxPrice: matchMaxPrice === '' ? Infinity : parseFloat(matchMaxPrice) };
+    setMatchedResults(matchSkillsToUser(userNeeds, skills));
   };
 
   // Function to toggle card expansion on click
@@ -143,6 +153,50 @@ function App() {
               Total Cost: ${totalCost.toFixed(2)}
             </p>
           )}
+        </section>
+
+        {/* Skill Matcher Section */}
+        <section id="matcher" className="matcher-section">
+          <h2>Find My Match</h2>
+          <p className="section-subtitle">Find skills matching your category preference and maximum price budget.</p>
+          <div className="input-group">
+            <input
+              type="text"
+              placeholder="Category (e.g. Programming)"
+              value={matchCategory}
+              onChange={(e) => setMatchCategory(e.target.value)}
+              className="matcher-input"
+            />
+            <input
+              type="number"
+              placeholder="Max Price ($)"
+              value={matchMaxPrice}
+              onChange={(e) => setMatchMaxPrice(e.target.value)}
+              className="matcher-input"
+            />
+            <button 
+              className="btn-primary matcher-btn" 
+              onClick={handleMatch}
+            >
+              Find Match
+            </button>
+          </div>
+
+          <div className="cards-grid matcher-cards-grid">
+            {matchedResults.length > 0 ? (
+              matchedResults.map((match, idx) => (
+                <div key={idx} className="skill-card expanded matcher-card">
+                  <div className="card-header">
+                    <h3>{match.title}</h3>
+                    <span className="card-price">${match.price}/hr</span>
+                  </div>
+                  <p className="card-provider">Category: <strong>{match.category}</strong></p>
+                </div>
+              ))
+            ) : (
+              matchMaxPrice !== '' && <p className="no-match-text">No matching skills found within your budget and category.</p>
+            )}
+          </div>
         </section>
       </main>
 
